@@ -1,0 +1,297 @@
+/* ---------- GABARIT DE PAGE CENTRAL ---------- */
+.main-content {
+    padding: 32px 40px;
+    background: #f4f6fa;
+    min-height: 100vh;
+}
+
+/* ---------- HEADER DE LA PAGE ---------- */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 28px;
+}
+
+.page-header h1 {
+    font-size: 26px;
+    font-weight: 700;
+    color: #1e2432;
+    margin: 0 0 4px;
+}
+
+.page-subtitle {
+    color: #8a94a6;
+    font-size: 14px;
+    margin: 0;
+}
+
+/* ---------- CONTENEUR CARDS ---------- */
+.table-card {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 1px 3px rgba(20, 24, 40, 0.06);
+    padding: 24px;
+}
+
+.table-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+.section-title-custom {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1e2432;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.section-title-custom i {
+    color: #9a6633;
+}
+
+/* ---------- FORMULAIRE D'AJOUT ---------- */
+.form-grid-custom {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: flex-end;
+}
+
+.form-group-custom {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+    min-width: 200px;
+}
+
+.form-group-custom.action-btn-container {
+    flex: none;
+    min-width: auto;
+}
+
+
+
+.label-custom {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .02em;
+    text-transform: uppercase;
+    color: #6b5544;
+}
+
+.input-custom,
+.select-custom {
+    padding: 11px 13px;
+    border: 1.5px solid #e6e0d8;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    background: #fbfaf8;
+    color: #1e2432;
+    transition: border-color .15s ease, background .15s ease;
+    width: 100%;
+}
+
+.input-custom:focus,
+.select-custom:focus {
+    border-color: #8a5a30;
+    background: #fff;
+}
+
+.btn-primary-custom {
+    background: linear-gradient(135deg, #9a6633 0%, #1c1410 100%);
+    color: #fff;
+    border: none;
+    padding: 12px 22px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: filter .15s ease, transform .1s ease;
+    box-shadow: 0 4px 10px rgba(28, 20, 16, 0.25);
+    white-space: nowrap;
+    height: 43px;
+}
+
+.btn-primary-custom:hover { filter: brightness(1.1); }
+.btn-primary-custom:active { transform: scale(0.98); }
+
+/* ---------- BLOCS DE PERMISSIONS ---------- */
+.employee-block-row {
+    background: #fcfbfa;
+    border: 1px solid #e6e0d8;
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 16px;
+}
+.employee-block-row:last-child { margin-bottom: 0; }
+
+.employee-block-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.employee-info-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.emp-name {
+    font-weight: 700;
+    color: #1e2432;
+    font-size: 15px;
+}
+
+.emp-role-badge {
+    font-size: 11px;
+    background: #f3efe9;
+    color: #8a5a30;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.btn-save-permissions {
+    background: #f3efe9;
+    color: #5c4a3a;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 12px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background .15s ease;
+}
+.btn-save-permissions:hover { background: #e9e2d8; }
+
+
+
+/* ---------- TABLEAU DROITS ---------- */
+.table-scroll { overflow-x: auto; }
+
+.data-table-custom {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #f0f1f5;
+}
+
+.data-table-custom thead th {
+    text-align: left;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    color: #8a94a6;
+    background: #f7f8fb;
+    padding: 10px 14px;
+    border-bottom: 1px solid #f0f1f5;
+}
+
+.data-table-custom tbody td {
+    padding: 12px 14px;
+    font-size: 14px;
+    color: #333a47;
+}
+
+.checkbox-container {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    color: #4a5265;
+    font-weight: 500;
+}
+.checkbox-container input {
+    accent-color: #8a5a30;
+    width: 15px;
+    height: 15px;
+    cursor: pointer;
+}
+
+/* ---------- ALERTES ET LOGS ---------- */
+.alert-success-panel {
+    padding: 12px 20px;
+    background: #d9f3e3;
+    color: #1e824c;
+    border-radius: 8px;
+    margin-bottom: 24px;
+    font-size: 14px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logs-container-custom {
+    max-height: 200px;
+    overflow-y: auto;
+    background: #fbfaf8;
+    border: 1px solid #e6e0d8;
+    border-radius: 8px;
+    padding: 14px;
+}
+
+.log-row-item {
+    font-size: 13px;
+    padding: 6px 0;
+    border-bottom: 1px solid #f0edf5;
+    color: #333a47;
+}
+.log-row-item:last-child { border-bottom: none; }
+.log-timestamp { color: #8a94a6; font-weight: 500; }
+.log-actor { font-weight: 600; color: #1e2432; }
+
+@media (max-width: 768px) {
+    .form-group-custom { min-width: 100%; }
+    .btn-primary-custom { width: 100%; justify-content: center; }
+    .employee-block-header{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+        flex-direction: column;
+        gap: 5px;
+    }
+}
+
+/* ---------- BOUTON SUPPRIMER EMPLOYÉ ---------- */
+.btn-delete-employee {
+    background: #fdf2f2;
+    color: #de350b;
+    border: 1px solid #f8d7da;
+    padding: 8px 14px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 12px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background .15s ease, color .15s ease;
+}
+
+.btn-delete-employee:hover {
+    background: #de350b;
+    color: #ffffff;
+    border-color: #de350b;
+}

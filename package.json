@@ -1,0 +1,32 @@
+{
+  "name": "palmfox",
+  "productName": "PalmFox",
+  "version": "1.0.0",
+  "description": "Application PalmFox",
+  "main": "main.js",
+  "author": "Shadow",
+
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder",
+    "win": "electron-builder --win"
+  },
+
+  "devDependencies": {
+    "electron": "^41.1.1",
+    "electron-builder": "^26.15.3"
+  },
+
+  "build": {
+    "appId": "com.palmfox.app",
+    "productName": "PalmFox",
+    "directories": {
+      "buildResources": "build",
+      "output": "dist"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "build/icon.ico"
+    }
+  }
+}
