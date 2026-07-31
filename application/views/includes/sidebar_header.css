@@ -169,6 +169,27 @@ body {
     justify-content: center;
     gap: 0;
 }
-.sidebar.collapsed + .main-content {
+.sidebar.collapsed ~ .main-content {
     margin-left: 72px;
+}
+
+/* Sur desktop, le hamburger fait disparaître complètement la sidebar */
+@media (min-width: 701px) {
+    .sidebar.collapsed {
+        width: 0;
+        padding: 24px 0;
+        overflow: hidden;
+    }
+    .sidebar.collapsed .sidebar-toggle-btn {
+        position: fixed;
+        top: 28px;
+        left: 16px;
+        z-index: 200;
+        background: #131a2b;
+        padding: 8px 10px;
+        border-radius: 8px;
+    }
+    .sidebar.collapsed ~ .main-content {
+        margin-left: 0;
+    }
 }

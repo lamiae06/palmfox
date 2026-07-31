@@ -4,9 +4,18 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 ?>
-<aside class="sidebar">
+
+<!-- Bouton hamburger flottant : toujours visible sur mobile, même quand la sidebar est fermée -->
+<button id="mobileSidebarToggle" class="mobile-sidebar-toggle" type="button" aria-label="Ouvrir le menu" aria-expanded="false">
+    <i class="fa-solid fa-bars"></i>
+</button>
+
+<!-- Fond sombre affiché derrière la sidebar quand elle est ouverte sur mobile -->
+<div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+<aside class="sidebar" id="sidebar">
     <div class="sidebar-logo">
-        <button id="sidebarToggle" class="sidebar-toggle-btn" type="button">
+        <button id="sidebarToggle" class="sidebar-toggle-btn" type="button" aria-label="Réduire / agrandir le menu">
             <i class="fa-solid fa-bars"></i>
         </button>
         <i class="fa-solid fa-cubes"></i>
@@ -49,16 +58,71 @@ if (session_status() === PHP_SESSION_NONE) {
 
 <script>
 (function() {
-    const sidebar = document.querySelector(".sidebar");
-    const toggleBtn = document.getElementById("sidebarToggle");
+    const sidebar          = document.getElementById("sidebar");
+    const toggleBtn        = document.getElementById("sidebarToggle");
+    const mobileToggleBtn  = document.getElementById("mobileSidebarToggle");
+    const overlay          = document.getElementById("sidebarOverlay");
 
-    if (localStorage.getItem("sidebarCollapsed") === "true") {
+    const isMobile = () => window.matchMedia("(max-width: 768px)").matches;
+
+    // --- Etat "réduit" (desktop uniquement), mémorisé entre les visites ---
+    if (!isMobile() && localStorage.getItem("sidebarCollapsed") === "true") {
         sidebar.classList.add("collapsed");
     }
 
+    function openMobileSidebar() {
+        sidebar.classList.add("mobile-open");
+        overlay.classList.add("active");
+        mobileToggleBtn.setAttribute("aria-expanded", "true");
+        document.body.style.overflow = "hidden"; // évite le scroll derrière l'overlay
+    }
+
+    function closeMobileSidebar() {
+        sidebar.classList.remove("mobile-open");
+        overlay.classList.remove("active");
+        mobileToggleBtn.setAttribute("aria-expanded", "false");
+        document.body.style.overflow = "";
+    }
+
+    // Bouton hamburger flottant (mobile) : ouvre/ferme la sidebar en overlay
+    mobileToggleBtn.addEventListener("click", function() {
+        if (sidebar.classList.contains("mobile-open")) {
+            closeMobileSidebar();
+        } else {
+            openMobileSidebar();
+        }
+    });
+
+    // Clic sur le fond sombre = fermeture
+    overlay.addEventListener("click", closeMobileSidebar);
+
+    // Bouton hamburger dans le logo : réduit/agrandit sur desktop, ferme sur mobile
     toggleBtn.addEventListener("click", function() {
+        if (isMobile()) {
+            closeMobileSidebar();
+            return;
+        }
         sidebar.classList.toggle("collapsed");
         localStorage.setItem("sidebarCollapsed", sidebar.classList.contains("collapsed"));
+    });
+
+    // Ferme automatiquement le menu mobile après le clic sur un lien
+    sidebar.querySelectorAll(".nav-item").forEach(function(link) {
+        link.addEventListener("click", function() {
+            if (isMobile()) closeMobileSidebar();
+        });
+    });
+
+    // Touche Échap = fermeture sur mobile
+    document.addEventListener("keydown", function(e) {
+        if (e.key === "Escape") closeMobileSidebar();
+    });
+
+    // Remet tout à zéro si on redimensionne la fenêtre (évite un état "coincé")
+    window.addEventListener("resize", function() {
+        if (!isMobile()) {
+            closeMobileSidebar();
+        }
     });
 })();
 </script>
