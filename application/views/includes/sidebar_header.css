@@ -1,4 +1,4 @@
-/* sidebar_header.css — sidebar partagé PalmFox (toutes les pages)*/
+/* ---------- SUPPRESSION SOULIGNEMENT PROFIL TOPBAR ET FICHIER GLOBAL CSS ---------- */
 
 * { box-sizing: border-box; }
 
@@ -6,7 +6,59 @@ body {
     margin: 0;
     font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
 }
-/*SIDEBAR*/
+
+/* TOPBAR */
+.topbar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 10px 30px;
+    background: #ffffff;
+    height: 70px;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    margin-bottom: 24px;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.user-avatar {
+    width: 38px;
+    height: 38px;
+    background: linear-gradient(135deg, #8a5a30, #1c1410);
+    color: #fff;
+    font-weight: 700;
+    font-size: 14px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.user-profile h5 {
+    margin: 0;
+    font-size: 14px;
+    color: #1e2432;
+    font-weight: 600;
+    text-decoration: none !important;
+}
+
+/* Suppression formelle du soulignement sur les liens et textes du profil */
+.topbar a,
+.user-profile a {
+    text-decoration: none !important;
+}
+
+.topbar a:hover,
+.user-profile a:hover {
+    text-decoration: none !important;
+}
+
+/* SIDEBAR DE BASE */
 .sidebar {
     position: fixed;
     top: 0;
@@ -18,8 +70,9 @@ body {
     display: flex;
     flex-direction: column;
     z-index: 100;
-    transition: width .2s ease, padding .2s ease;
+    transition: width .2s ease, padding .2s ease, transform .2s ease;
 }
+
 .sidebar-logo {
     display: flex;
     align-items: center;
@@ -28,6 +81,8 @@ body {
     font-size: 19px;
     font-weight: 700;
     padding: 4px 10px 28px;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .sidebar-logo i {
@@ -39,6 +94,8 @@ body {
     display: flex;
     flex-direction: column;
     gap: 4px;
+    overflow-y: auto;
+    flex: 1;
 }
 
 .nav-item {
@@ -51,6 +108,7 @@ body {
     text-decoration: none;
     font-size: 15px;
     font-weight: 500;
+    white-space: nowrap;
     transition: background .15s ease, color .15s ease;
 }
 
@@ -58,6 +116,7 @@ body {
     width: 18px;
     text-align: center;
     font-size: 16px;
+    flex-shrink: 0;
 }
 
 .nav-item:hover {
@@ -79,61 +138,42 @@ body {
 .main-content {
     margin-left: 250px;
     transition: margin-left .2s ease;
+    padding: 20px;
 }
 
-@media (max-width: 700px) {
-    .sidebar { width: 72px; padding: 24px 10px; }
-    .sidebar-logo span,
-    .nav-item span,
-    .nav-item {font-size: 0px;}
-    .nav-item { justify-content: center; }
-    .nav-item { gap: 0; }
-    .main-content { margin-left: 72px; }
-    .sidebar-logo {
-        flex-direction: column;
-        gap: 10px;
-        padding: 4px 0 24px;
-    }
-}
-
-.topbar {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 12px;
-}
-
-.user-profile {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    text-decoration: none;
+/* BOUTON HAMBURGER FLOTTANT (Mobile / Desktop replié total) */
+.mobile-sidebar-toggle {
+    display: none;
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    z-index: 200;
+    background: #131a2b;
+    color: #ffffff;
+    border: none;
+    padding: 10px 12px;
+    border-radius: 8px;
     cursor: pointer;
-    padding: 4px 8px;
-    border-radius: 10px;
-    transition: background .15s ease;
-}
-.user-profile:hover { background: #eee7dd; }
-
-.user-avatar {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #9a6633 0%, #1c1410 100%);
-    color: #fff;
-    font-weight: 700;
-    font-size: 13px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.user-profile h5 {
-    margin: 0;
-    font-size: 14px;
-    color: #1e2432;
-    font-weight: 600;
+    font-size: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
 
-/* Bouton hamburger + sidebar collapsible */
+/* OVERLAY MOBILE */
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 90;
+}
+.sidebar-overlay.active {
+    display: block;
+}
+
+/* BOUTON TOGGLE INTERNE */
 .sidebar-toggle-btn {
     background: none;
     border: none;
@@ -149,21 +189,20 @@ body {
     background: rgba(255, 255, 255, 0.08);
 }
 
+/* MODE COLLAPSED DESKTOP (Mini sidebar) */
 .sidebar.collapsed {
     width: 72px;
     padding: 24px 10px;
 }
 .sidebar.collapsed .sidebar-logo span,
-.sidebar.collapsed .nav-item span,
-.sidebar.collapsed .nav-item {
-    font-size: 0px;
+.sidebar.collapsed .nav-item span {
+    display: none;
 }
 .sidebar.collapsed .sidebar-logo {
     flex-direction: column;
     justify-content: center;
     gap: 10px;
-    padding-left: 0;
-    padding-right: 0;
+    padding: 4px 0 24px;
 }
 .sidebar.collapsed .nav-item {
     justify-content: center;
@@ -173,23 +212,24 @@ body {
     margin-left: 72px;
 }
 
-/* Sur desktop, le hamburger fait disparaître complètement la sidebar */
-@media (min-width: 701px) {
-    .sidebar.collapsed {
-        width: 0;
-        padding: 24px 0;
-        overflow: hidden;
+/* RESPONSIVE DESIGN */
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        width: 250px !important;
     }
-    .sidebar.collapsed .sidebar-toggle-btn {
-        position: fixed;
-        top: 28px;
-        left: 16px;
-        z-index: 200;
-        background: #131a2b;
-        padding: 8px 10px;
-        border-radius: 8px;
+    .sidebar.mobile-open {
+        transform: translateX(0);
     }
-    .sidebar.collapsed ~ .main-content {
-        margin-left: 0;
+    .mobile-sidebar-toggle {
+        display: block;
+    }
+    .main-content {
+        margin-left: 0 !important;
+        padding-top: 70px;
+    }
+    .sidebar .sidebar-logo span,
+    .sidebar .nav-item span {
+        display: inline !important;
     }
 }

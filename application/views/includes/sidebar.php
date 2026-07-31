@@ -5,12 +5,12 @@ if (session_status() === PHP_SESSION_NONE) {
 }
 ?>
 
-<!-- Bouton hamburger flottant : toujours visible sur mobile, même quand la sidebar est fermée -->
+<!-- Bouton hamburger flottant unique : visible sur mobile ou quand la sidebar est complètement masquée sur desktop -->
 <button id="mobileSidebarToggle" class="mobile-sidebar-toggle" type="button" aria-label="Ouvrir le menu" aria-expanded="false">
     <i class="fa-solid fa-bars"></i>
 </button>
 
-<!-- Fond sombre affiché derrière la sidebar quand elle est ouverte sur mobile -->
+<!-- Fond sombre affiché derrière la sidebar quand elle est ouverte -->
 <div id="sidebarOverlay" class="sidebar-overlay"></div>
 
 <aside class="sidebar" id="sidebar">
@@ -19,53 +19,50 @@ if (session_status() === PHP_SESSION_NONE) {
             <i class="fa-solid fa-bars"></i>
         </button>
         <i class="fa-solid fa-cubes"></i>
-        <span>PalmFox</span>
+        <span class="logo-text">PalmFox</span>
     </div>
     <nav class="sidebar-nav">
         <a href="../dashboard/dashboard.php" class="nav-item">
-            <i class="fa-solid fa-chart-pie"></i> Dashboard
+            <i class="fa-solid fa-chart-pie"></i> <span>Dashboard</span>
         </a>
         <a href="../client/clients.php" class="nav-item">
-            <i class="fa-solid fa-users"></i> Clients
+            <i class="fa-solid fa-users"></i> <span>Clients</span>
         </a>
         <a href="../produit/produits.php" class="nav-item">
-            <i class="fa-solid fa-box-open"></i> Produits
+            <i class="fa-solid fa-box-open"></i> <span>Produits</span>
         </a>
         <a href="../commande/commande.php" class="nav-item">
-            <i class="fa-solid fa-cart-shopping"></i> Commandes
+            <i class="fa-solid fa-cart-shopping"></i> <span>Commandes</span>
         </a>
         <a href="../livraison/livraisons.php" class="nav-item">
-            <i class="fa-solid fa-truck"></i> Livraisons
+            <i class="fa-solid fa-truck"></i> <span>Livraisons</span>
         </a>
-
         <a href="../rapport_chatbot/rapport_chatbot.php" class="nav-item">
-            <i class="fa-solid fa-chart-line"></i> Rapport Chatbot
+            <i class="fa-solid fa-chart-line"></i> <span>Rapport Chatbot</span>
         </a>
 
         <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'super_admin'): ?>
             <a href="../gestion_acces/gestion_acces.php" class="nav-item">
-                <i class="fa-solid fa-user-lock"></i> Gestion Accès
+                <i class="fa-solid fa-user-lock"></i> <span>Gestion Accès</span>
             </a>
         <?php endif; ?>
 
-
-
         <a href="../logout.php" class="nav-item nav-logout">
-            <i class="fa-solid fa-right-from-bracket"></i> Déconnexion
+            <i class="fa-solid fa-right-from-bracket"></i> <span>Déconnexion</span>
         </a>
     </nav>
 </aside>
 
 <script>
 (function() {
-    const sidebar          = document.getElementById("sidebar");
-    const toggleBtn        = document.getElementById("sidebarToggle");
-    const mobileToggleBtn  = document.getElementById("mobileSidebarToggle");
-    const overlay          = document.getElementById("sidebarOverlay");
+    const sidebar         = document.getElementById("sidebar");
+    const toggleBtn       = document.getElementById("sidebarToggle");
+    const mobileToggleBtn = document.getElementById("mobileSidebarToggle");
+    const overlay         = document.getElementById("sidebarOverlay");
 
     const isMobile = () => window.matchMedia("(max-width: 768px)").matches;
 
-    // --- Etat "réduit" (desktop uniquement), mémorisé entre les visites ---
+    // Restauration de l'état réduit sur desktop
     if (!isMobile() && localStorage.getItem("sidebarCollapsed") === "true") {
         sidebar.classList.add("collapsed");
     }
@@ -74,7 +71,7 @@ if (session_status() === PHP_SESSION_NONE) {
         sidebar.classList.add("mobile-open");
         overlay.classList.add("active");
         mobileToggleBtn.setAttribute("aria-expanded", "true");
-        document.body.style.overflow = "hidden"; // évite le scroll derrière l'overlay
+        document.body.style.overflow = "hidden";
     }
 
     function closeMobileSidebar() {
@@ -84,7 +81,6 @@ if (session_status() === PHP_SESSION_NONE) {
         document.body.style.overflow = "";
     }
 
-    // Bouton hamburger flottant (mobile) : ouvre/ferme la sidebar en overlay
     mobileToggleBtn.addEventListener("click", function() {
         if (sidebar.classList.contains("mobile-open")) {
             closeMobileSidebar();
@@ -93,10 +89,8 @@ if (session_status() === PHP_SESSION_NONE) {
         }
     });
 
-    // Clic sur le fond sombre = fermeture
     overlay.addEventListener("click", closeMobileSidebar);
 
-    // Bouton hamburger dans le logo : réduit/agrandit sur desktop, ferme sur mobile
     toggleBtn.addEventListener("click", function() {
         if (isMobile()) {
             closeMobileSidebar();
@@ -106,23 +100,14 @@ if (session_status() === PHP_SESSION_NONE) {
         localStorage.setItem("sidebarCollapsed", sidebar.classList.contains("collapsed"));
     });
 
-    // Ferme automatiquement le menu mobile après le clic sur un lien
     sidebar.querySelectorAll(".nav-item").forEach(function(link) {
         link.addEventListener("click", function() {
             if (isMobile()) closeMobileSidebar();
         });
     });
 
-    // Touche Échap = fermeture sur mobile
     document.addEventListener("keydown", function(e) {
         if (e.key === "Escape") closeMobileSidebar();
-    });
-
-    // Remet tout à zéro si on redimensionne la fenêtre (évite un état "coincé")
-    window.addEventListener("resize", function() {
-        if (!isMobile()) {
-            closeMobileSidebar();
-        }
     });
 })();
 </script>

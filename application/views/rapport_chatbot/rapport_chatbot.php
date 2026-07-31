@@ -60,7 +60,6 @@ function categoriserMessage($msgNorm) {
 
 // ============================================================
 // Construire les statistiques pour un ensemble de messages
-// (utilisé pour la vue globale, par employé, et "mon activité")
 // ============================================================
 function calculerStats($messages) {
     $total = count($messages);
@@ -75,7 +74,6 @@ function calculerStats($messages) {
         $types[$type] = ($types[$type] ?? 0) + 1;
         $modules[$module] = ($modules[$module] ?? 0) + 1;
 
-        // Regroupement des questions identiques (texte normalisé)
         $questionsCount[$norm] = ($questionsCount[$norm] ?? 0) + 1;
     }
 
@@ -83,7 +81,6 @@ function calculerStats($messages) {
     arsort($modules);
     arsort($questionsCount);
 
-    // Convertir en pourcentages
     $typesPct = [];
     foreach ($types as $k => $v) {
         $typesPct[] = ['label' => $k, 'count' => $v, 'pct' => $total > 0 ? round($v / $total * 100) : 0];
@@ -93,13 +90,11 @@ function calculerStats($messages) {
         $modulesPct[] = ['label' => $k, 'count' => $v, 'pct' => $total > 0 ? round($v / $total * 100) : 0];
     }
 
-    // Top 5 questions les plus fréquentes (retrouver un exemplaire du texte original pour l'affichage)
     $topQuestions = [];
     $i = 0;
     foreach ($questionsCount as $normText => $count) {
-        if ($count < 2) continue; // on ne garde que les vraies répétitions
+        if ($count < 2) continue;
         if ($i >= 5) break;
-        // Retrouver le texte original correspondant (premier trouvé)
         foreach ($messages as $m) {
             if (normaliser($m['contenu']) === $normText) {
                 $topQuestions[] = ['texte' => $m['contenu'], 'count' => $count];
@@ -118,7 +113,7 @@ function calculerStats($messages) {
 }
 
 // ============================================================
-// Récupération des messages utilisateur (role='user') depuis la base
+// Récupération des données base de données
 // ============================================================
 function recupererMessages($conn, $idUserFiltre = null) {
     if ($idUserFiltre) {
@@ -160,16 +155,10 @@ function compterConversations($conn, $idUserFiltre = null) {
     return mysqli_fetch_assoc($res)['t'] ?? 0;
 }
 
-// ============================================================
-// Calcul des données à afficher selon le rôle
-// ============================================================
-
-// "Mon activité" — toujours calculé, pour tout le monde (y compris super_admin)
 $mesMessages = recupererMessages($conn, $userId);
 $mesStats = calculerStats($mesMessages);
 $mesConversations = compterConversations($conn, $userId);
 
-// Vue globale + par employé — uniquement pour super_admin
 $statsGlobales = null;
 $statsParEmploye = [];
 if ($estSuperAdmin) {
@@ -177,13 +166,12 @@ if ($estSuperAdmin) {
     $statsGlobales = calculerStats($tousMessages);
     $totalConversations = compterConversations($conn, null);
 
-    // Récupérer la liste des employés (hors super_admin) pour le détail
     $resUsers = mysqli_query($conn, "SELECT id_user, username, role FROM utilisateurs ORDER BY username ASC");
     while ($u = mysqli_fetch_assoc($resUsers)) {
         $msgsEmploye = array_values(array_filter($tousMessages, function($m) use ($u) {
             return $m['id_user'] == $u['id_user'];
         }));
-        if (count($msgsEmploye) === 0) continue; // ignorer les employés sans activité
+        if (count($msgsEmploye) === 0) continue;
         $statsParEmploye[] = [
             'username' => $u['username'],
             'role' => $u['role'],
@@ -209,11 +197,12 @@ if ($estSuperAdmin) {
     <?php include "../includes/sidebar.php"; ?>
 
     <main class="main-content">
+        <!-- Topbar correctement positionnée à droite -->
         <div class="topbar">
-            <a href="#" class="user-profile">
+            <div class="user-profile">
                 <div class="user-avatar"><?= strtoupper(substr($username, 0, 2)) ?></div>
                 <h5><?= htmlspecialchars($username) ?></h5>
-            </a>
+            </div>
         </div>
 
         <header class="page-header">
@@ -244,7 +233,7 @@ if ($estSuperAdmin) {
             </div>
 
             <?php if ($statsGlobales['total'] > 0): ?>
-                <h3 style="font-size:14px;color:#8a94a6;text-transform:uppercase;letter-spacing:.5px;">Répartition par type d'action</h3>
+                <h3>Répartition par type d'action</h3>
                 <?php foreach ($statsGlobales['types'] as $t): ?>
                     <div class="barre-pct">
                         <div class="nom"><?= htmlspecialchars($t['label']) ?></div>
@@ -253,7 +242,7 @@ if ($estSuperAdmin) {
                     </div>
                 <?php endforeach; ?>
 
-                <h3 style="font-size:14px;color:#8a94a6;text-transform:uppercase;letter-spacing:.5px;margin-top:20px;">Répartition par module</h3>
+                <h3 style="margin-top:20px;">Répartition par module</h3>
                 <?php foreach ($statsGlobales['modules'] as $m): ?>
                     <div class="barre-pct">
                         <div class="nom"><?= htmlspecialchars($m['label']) ?></div>
@@ -263,7 +252,7 @@ if ($estSuperAdmin) {
                 <?php endforeach; ?>
 
                 <?php if (count($statsGlobales['topQuestions']) > 0): ?>
-                    <h3 style="font-size:14px;color:#8a94a6;text-transform:uppercase;letter-spacing:.5px;margin-top:20px;">Questions les plus fréquentes</h3>
+                    <h3 style="margin-top:20px;">Questions les plus fréquentes</h3>
                     <ul class="top-questions">
                         <?php foreach ($statsGlobales['topQuestions'] as $q): ?>
                             <li>
@@ -274,7 +263,7 @@ if ($estSuperAdmin) {
                     </ul>
                 <?php endif; ?>
 
-                <button class="btn-ia" id="btnIaGlobal" data-scope="global">
+                <button class="btn-ia" id="btnIaGlobal" data-scope="global" style="margin-top: 15px;">
                     <i class="fa-solid fa-wand-magic-sparkles"></i> Générer une analyse IA
                 </button>
                 <div class="analyse-ia-resultat" id="iaResultGlobal" style="display:none;"></div>
@@ -344,7 +333,7 @@ if ($estSuperAdmin) {
             </div>
 
             <?php if ($mesStats['total'] > 0): ?>
-                <h3 style="font-size:14px;color:#8a94a6;text-transform:uppercase;letter-spacing:.5px;">Répartition par type d'action</h3>
+                <h3>Répartition par type d'action</h3>
                 <?php foreach ($mesStats['types'] as $t): ?>
                     <div class="barre-pct">
                         <div class="nom"><?= htmlspecialchars($t['label']) ?></div>
@@ -353,7 +342,7 @@ if ($estSuperAdmin) {
                     </div>
                 <?php endforeach; ?>
 
-                <h3 style="font-size:14px;color:#8a94a6;text-transform:uppercase;letter-spacing:.5px;margin-top:20px;">Répartition par module</h3>
+                <h3 style="margin-top:20px;">Répartition par module</h3>
                 <?php foreach ($mesStats['modules'] as $m): ?>
                     <div class="barre-pct">
                         <div class="nom"><?= htmlspecialchars($m['label']) ?></div>
@@ -363,7 +352,7 @@ if ($estSuperAdmin) {
                 <?php endforeach; ?>
 
                 <?php if (count($mesStats['topQuestions']) > 0): ?>
-                    <h3 style="font-size:14px;color:#8a94a6;text-transform:uppercase;letter-spacing:.5px;margin-top:20px;">Mes questions les plus répétées</h3>
+                    <h3 style="margin-top:20px;">Mes questions les plus répétées</h3>
                     <ul class="top-questions">
                         <?php foreach ($mesStats['topQuestions'] as $q): ?>
                             <li>
@@ -374,7 +363,7 @@ if ($estSuperAdmin) {
                     </ul>
                 <?php endif; ?>
 
-                <button class="btn-ia" id="btnIaPerso" data-scope="perso">
+                <button class="btn-ia" id="btnIaPerso" data-scope="perso" style="margin-top: 15px;">
                     <i class="fa-solid fa-wand-magic-sparkles"></i> Générer une analyse IA
                 </button>
                 <div class="analyse-ia-resultat" id="iaResultPerso" style="display:none;"></div>
@@ -385,6 +374,12 @@ if ($estSuperAdmin) {
     </main>
 
     <script>
+        // Colorer le lien actif dans la sidebar
+        const activeLink = document.querySelector('.sidebar-nav a[href*="rapport_chatbot.php"]');
+        if (activeLink) {
+            activeLink.classList.add('active');
+        }
+
         function genererAnalyseIA(scope, btnId, resultId) {
             const btn = document.getElementById(btnId);
             const result = document.getElementById(resultId);
