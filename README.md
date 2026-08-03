@@ -24,4 +24,7 @@ et espace Utilisateur, design system dark navy unifié.
 
 ## Aperçu
 
-*(ajoute ici les captures d'écran : écran de choix d'espace, dashboard, sidebar)*
+<img width="1138" height="514" alt="image" src="https://github.com/user-attachments/assets/36eac067-895d-4dd8-affc-4af488fad76b" />
+<img width="1179" height="543" alt="image" src="https://github.com/user-attachments/assets/b2262543-8ebe-45d3-a710-0ccdc96b4a1e" />
+<img width="279" height="574" alt="image" src="https://github.com/user-attachments/assets/fe53180c-d6b9-4a07-82e7-c205525ca3f2" />
+
