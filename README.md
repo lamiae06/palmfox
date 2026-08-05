@@ -2,7 +2,6 @@
 
 Système de gestion clients/commandes développé en équipe. Interface avec espace Admin
 et espace Utilisateur, design system dark navy unifié.
-
 ## Fonctionnalités
 
 - **Authentification** — connexion par session, séparation Espace Admin / Espace Utilisateur
@@ -13,7 +12,7 @@ et espace Utilisateur, design system dark navy unifié.
 - **Livraisons** — suivi des livraisons liées aux commandes
 - **Rapport Chatbot** — page d'analyse IA du dashboard (clients, commandes, livraisons, stock), basée sur Ollama avec le modèle Qwen3
 - **Gestion Accès** — administration des droits utilisateurs
-
+- **Réinitialisation de mot de passe** — renouvellement du mot de passe par vérification email (SMTP)
 ## Stack technique
 
 - **Back-end** : PHP, MySQLi
